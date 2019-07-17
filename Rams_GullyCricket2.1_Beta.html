@@ -9,10 +9,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
+  <meta http-equiv="Expires" content="-1" />
   <meta http-equiv="Content-Language" content="en">
   <title>Cricket Score</title>
 <script>
+
+function toggle(divId){
+	var div = document.getElementById(divId);
+  if (div.style.display === "none") {
+    div.style.display = "block";
+  } else {
+    div.style.display = "none";
+  }
+}
+
+function editBatsMenScore(){
+ toggle("editScores");
+ document.getElementById("scoreArea").value=document.getElementById("BatsMenStore").innerHTML;
+}
+
+function UpdateBatsMenScore(){
+ document.getElementById("BatsMenStore").innerHTML=document.getElementById("scoreArea").value;
+ toggle("editScores");
+}
+
 var playersScoreMap = {};
 
 function isSyncOn() {
@@ -233,7 +253,7 @@ function changePlayer() {
 		document.getElementById("player2Name").value = "player2";
 	}
 	var outBatsmenList = document.getElementById("BatsMenStore").innerHTML;
-	outBatsmenList = outBatsmenList + '<br><b>' + playerName + ' : </b>' + document.getElementById(striker).innerHTML;
+	outBatsmenList = outBatsmenList + '<br><b>' + playerName + ' : ' + document.getElementById(striker).innerHTML+'</b>';
 	document.getElementById("BatsMenStore").innerHTML = outBatsmenList;
 	playersScoreMap[striker] = 0;
 	document.getElementById(striker).innerHTML = 0;
@@ -592,7 +612,9 @@ h2 {
 }
 
 #player2Name,
-#player1Name {
+#player1Name,
+#targetScore,
+#targetOvers {
 	height: 20px;
 	width: 60px;
 	background-color: white;
@@ -621,9 +643,10 @@ input[type=text],
 }
 
 #notify {
-	color: green;
-	font-size: 20px;
-	padding-left: 20px;
+	color: navy;
+	font-size: 15px;
+	padding-left: 10px;
+	background-color:yellow;
 }
 
 .table2 {
@@ -693,15 +716,15 @@ input[type=text],
       </table>
    </div>
    <br>
-   <div style="overflow-x:auto;">
+   <div>
       <b id="notify">Notifications!</b>
       <table>
-      <tr>
-         <td><b>Batsmen Score:</b></td>
-         <td id="BatsMenStore"></td>
-      </tr>
-      </td>
-      <table border="3px 3px" class="table1">
+	  <tr id="targetDiv" style="display:none"><td>Score:<input type="text" id="targetScore" value="0" /> Max Overs:<input type="text" id="targetOvers" value="0" /><button onclick="setTarget">Update</button></td></tr>
+	  <tr><td><button onclick="toggle('batsMenScoreDiv')">Batsmen Score</button></td><td><button onclick="toggle('ballByballDiv')">BallByBall</button></td><td><button onclick="toggle('targetDiv')">setTarget</button></td></tr>
+      <tr id="batsMenScoreDiv" style="display:none"> <td id="BatsMenStore"></td><td><button onclick="editBatsMenScore()">Edit section</button>
+	  <div id="editScores" style="display:none"><textarea id="scoreArea"></textarea><button onclick="UpdateBatsMenScore()">Update</button></div></td></tr>
+      </table>
+      <table border="3px 3px" class="table1" id='ballByballDiv' style="display:none;overflow-x:auto;">
          <tr>
             <td><b>Ball By Ball</b></td>
             <td><i id="ballByBall">[1] : </i></td>
