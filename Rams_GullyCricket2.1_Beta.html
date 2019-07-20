@@ -29,7 +29,7 @@ function setTarget() {
 			document.getElementById("notify").innerHTML = "End of the match! Chasing Team won!";
 		} else if (remBalls <= 0) {
 			document.getElementById("notify").innerHTML = "End of the match! Defending Team won!";
-		} else document.getElementById("notify").innerHTML = "Target Updated!!";
+		} 
 	}
 }
 
@@ -804,11 +804,9 @@ input[type=text],
          <tr id="batsMenScoreDiv" style="display:none">
             <td id="BatsMenStore"></td>
             <td><button onclick="editBatsMenScore()">Edit section</button></td>
-            <td>
                <div id="editScores" style="display:none"><textarea id="scoreArea"></textarea>
                   <button onclick="UpdateBatsMenScore()">Update</button>
                </div>
-            </td>
          </tr>
       </table>
       <table border="3px 3px" class="table1" id='ballByballDiv' style="display:none;overflow-x:auto;">
