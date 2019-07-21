@@ -216,6 +216,8 @@ function loadIng1() {
 		document.getElementById("BatsMenStore").innerHTML = localStorage.getItem("outIndScore");
 		document.getElementById("player1").innerHTML = localStorage.getItem("player1");
 		document.getElementById("player2").innerHTML = localStorage.getItem("player2");
+		playersScoreMap["player1"] = localStorage.getItem("player1");
+		playersScoreMap["player2"] = localStorage.getItem("player2");
 		if ((localStorage.getItem("targetOvers") === null) || (localStorage.getItem("targetScore") === null)) {
 			//do nothing
 		} else {
@@ -223,7 +225,7 @@ function loadIng1() {
 			document.getElementById("targetScore").value = localStorage.getItem("targetScore");
 			setTarget();
 		}
-		document.getElementById("notify").innerHTML = "Innings 1 Score Retrieved!";
+		document.getElementById("notify").innerHTML = " Innings 1 Score Retrieved!";
 
 	} else {
 		document.getElementById("notify").innerHTML = "No Storage found for innings1!"
@@ -826,8 +828,8 @@ input[type=text],
    </td></tr></table>
    <hr>
    <div id="syncData" style="display: none;">
-      <!--<form  action='update.php'  method='post' id='pushData'>-->
-      <form  action='http://www.learnmodeon.com/cricket/update.php'  method='post' id='pushData'> 
+      <!--<form  action='update.php'  method='post' id='pushData'> -->
+      <form  action='http://www.learnmodeon.com/cricket/update.php'  method='post' id='pushData'>
          <input type="text" name="inningsId" id="inningsIdForm"><br>
          <input type="text" name="score" id="score">
          <input type="text" name="overs" id="overs">

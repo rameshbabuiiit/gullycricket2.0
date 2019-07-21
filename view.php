@@ -23,10 +23,7 @@ header("Pragma: no-cache");
 }
 </script>
 <?php
-echo "Requested at:".date("h:i:sa");
-?>
-	<button onclick="history.go(-1);">GO Back </button><br>
-<?php
+echo "Requested at-".date("h:i:sa");
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	
 
@@ -35,11 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	if($inningsId==""){
 		echo "Looks like you missed a moon in the night!";
 		return;
-	}
-	
-	
-
-	
+	}	
 		function db_connect()
     {
         static $connection;
@@ -53,7 +46,9 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         }
         return $connection;
     }
-    
+  ?>
+  <a href="view.php?inningsId=<?php echo $inningsId ?>&time=<?php echo time()?>"><button>Refresh</button></a>
+  <?php
     $connection = db_connect();
     
     // Check connection

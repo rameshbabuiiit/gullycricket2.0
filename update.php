@@ -1,7 +1,7 @@
 <?php
 echo "Requested at:".date("h:i:sa");
 ?>
-	<button onclick="history.go(-1);">GO Back </button><br>
+	<button onclick="history.go(-1);">Go Back</button><button onclick="location.href='http://learnmodeon.com/cricket/'">Go Online </button><br>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $inningsId  = $_POST["inningsId"];
@@ -70,7 +70,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $stmt->close();
     $connection->close();
-    header('Location: ' . $_SERVER['HTTP_REFERER']);
+   echo "<script>history.go(-1);</script>";
+   //header('Location: ' . $_SERVER['HTTP_REFERER']);
     
 } else {
     echo "<b>whats up buddy?? Looks like you have landed on mars!</b>";
