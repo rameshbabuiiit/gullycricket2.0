@@ -154,6 +154,8 @@ function pushData() {
 	document.getElementById("inningsIdForm").value = document.getElementById("inningsId").value;
 	document.getElementById("wktsdb").value = document.getElementById("wikts").innerHTML;
 	document.getElementById("crrdb").value = document.getElementById("runRate").innerHTML;
+	batsMenScore = "<tr><td>"+document.getElementById("player1Name").value+"*</td><td>"+document.getElementById("player1").innerHTML+"</td></tr>"+"<tr><td>"+document.getElementById("player2Name").value+"*</td><td>"+document.getElementById("player2").innerHTML+"</td></tr>"+document.getElementById("BatsMenStore").innerHTML;
+	document.getElementById("bmScoresdb").value=batsMenScore;
 	document.getElementById("pushData").submit();
 }
 
@@ -1050,9 +1052,9 @@ How to use the scoring app from middle of the match?
          <input type="text" name="ballByBalls" id="ballByBalls2">
          <input type="text" name="wktsdb" id="wktsdb">
          <input type="text" name="crrdb" id="crrdb">
+		 <input type="text" name="bmScoresdb" id="bmScoresdb">
          <input type="submit">
       </form>
-      <input type="text" id="url" value=""> 
    </div>
 </body>
 </html>
