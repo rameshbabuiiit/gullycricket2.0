@@ -13,6 +13,37 @@
   <meta http-equiv="Content-Language" content="en">
   <title>Cricket Score</title>
 <script>
+function overRidePlayerScore(player){
+	if(player === "player1"){
+		 updatedScore = document.getElementById("p1Score").value;
+		 document.getElementById("player1").innerHTML = updatedScore;
+		 document.getElementById("p1Score").value="0";
+		 toggleId="playerOverrideDiv";
+	}
+	else if(player === "player2"){
+			 updatedScore = document.getElementById("p2Score").value;
+		 document.getElementById("player2").innerHTML = updatedScore;
+		 toggleId="playerOverrideDiv2";
+		 document.getElementById("p2Score").value="0";
+	}
+	if (playersScoreMap.hasOwnProperty(player)) playersScoreMap[player] = updatedScore;
+	toggle(toggleId);
+	document.getElementById("notify").innerHTML = "Batsman score overridden!";
+}
+function retirePlayer(player){
+	if(player === "player1"){
+		document.getElementById("strike1").checked = true;
+		 toggleId="playerOverrideDiv";
+	}
+	else if(player === "player2"){
+			document.getElementById("strike2").checked = true;
+			 toggleId="playerOverrideDiv2";
+	}
+	changePlayer();
+	toggle(toggleId);
+	document.getElementById("notify").innerHTML = "Retired! Ensure who is on batting strike!";
+}
+
 function setTarget() {
 	targetScore = document.getElementById("targetScore").value;
 	targetBalls = document.getElementById("targetScore").value;
@@ -298,7 +329,7 @@ function changePlayer() {
 		document.getElementById("player2Name").value = "player2";
 	}
 	var outBatsmenList = document.getElementById("BatsMenStore").innerHTML;
-	outBatsmenList = outBatsmenList + '<br><b>' + playerName + ' : ' + document.getElementById(striker).innerHTML + '</b>';
+	outBatsmenList = outBatsmenList + '<tr><td>' + playerName + '</td><td>' + document.getElementById(striker).innerHTML + '</td></tr>';
 	document.getElementById("BatsMenStore").innerHTML = outBatsmenList;
 	playersScoreMap[striker] = 0;
 	document.getElementById(striker).innerHTML = 0;
@@ -320,8 +351,14 @@ function handleOver(runs) {
 		if (doesNoBallCount()) {
 			runs = 1 + (+xtras);
 		} else {
-			runs = 0
-		};
+			runs = 0;
+		}
+		if(xtras ==1 || xtras == 3){
+			UpdatePlayerScores(xtras);
+			changeStrike();
+		}else if (xtras == 2 || xtras == 4 || xtras == 6) {
+			UpdatePlayerScores(xtras);
+		}
 	} else if (runs == "Wd") {
 		ballByBall = ballByBall + runs + ",";
 		if (doesWideCount()) {
@@ -593,11 +630,36 @@ body {
 	border-radius: 10px;
 }
 
+#p1Retd,
+#p2Retd,
+#helpButton,
+#updP1Score,
+#updP2Score,
+#p1Ovrd,
+#p2Ovrd,
 #softMenu {
 	background-color: #e7e7e7;
 	text-align: center;
 	cursor: pointer;
 	border-radius: 10px;
+}
+
+#p1Retd:hover,
+#p2Retd:hover,
+#helpButton:hover,
+#softMenu:hover,
+#updP1Score:hover,
+#updP2Score:hover,
+#p1Ovrd:hover,
+#p2Ovrd:hover  {
+	background-color: #4CAF50;
+	color: white;
+	-webkit-animation-name: example;
+	/* Safari 4.0 - 8.0 */
+	-webkit-animation-duration: 4s;
+	/* Safari 4.0 - 8.0 */
+	animation-name: example;
+	animation-duration: 2s;
 }
 
 .button:hover {
@@ -669,6 +731,8 @@ h2 {
 #player2Name,
 #player1Name,
 #targetScore,
+#p1Score,
+#p2Score,
 #targetOvers {
 	height: 20px;
 	width: 60px;
@@ -711,24 +775,32 @@ input[type=text],
 }
 
 #batsMensScoreTable {
-	background-color: lightgreen;
 	table-layout: auto;
-	border-color: rgba(0, 0, 10, .15);
 	font-size: 16px;
 	border-radius: 30px;
 }
+
+#playerScoretbl,
+#settingsTbl{
+	table-layout: auto;
+	width: 100%;
+	border-collapse:collapse;
+
+}
+
+#playerOverrideDiv,#playerOverrideDiv,{
+	width:200px;
+}
+
+#BatsMenStore tr:nth-child(even) {background: #CCC; font-weight:bold;}
+#BatsMenStore tr:nth-child(odd) {background: lightgreen;font-weight:bold;}
+
 </style>
 </head>
 <body onload="initScript();">
    <h2>Ram's - Gully Cricket<b id="ing"></b></h2>
+   <br>
    <div style="overflow-x:auto;">
-      <table>
-         <tr>
-            <td><input type="checkbox" id="syncFlagId">Sync</td>
-            <td><input type="checkbox" id="wideFlagId" Checked>Wide</td>
-            <td><input type="checkbox" id="noBallFlagId" Checked>NoBall</td>
-         </tr>
-      </table>
       <table border="3px 3px" class="table2" align="center">
          <tr>
             <td><input type="text" id="initScore" placeholder="0" value="0" style="display:none;"/><button class="button" type="button" value="0" onClick="startIng1()">Start</button></td>
@@ -737,17 +809,31 @@ input[type=text],
             </td>
             <td><button class="button" type="button" value="0" onClick="clearStorage()">Clear</button></td>
          </tr>
+      </table><br>
+	   <table id="settingsTbl" border="1px 1px">
+         <tr>
+            <td><input type="checkbox" id="syncFlagId">Sync</td>
+            <td><input type="checkbox" id="wideFlagId" Checked>Wide</td>
+            <td><input type="checkbox" id="noBallFlagId" Checked>NoBall</td>
+			<td><button id='helpButton' onclick="toggle('helpSection')">Help?</button></td>
+         </tr>
       </table>
    </div>
-   <table>
+   <table id="playerScoretbl">
       <div id="striking">
          <tr>
-            <td><input type="radio" id="strike1" name="strike" value="player1" checked><input type="text" id="player1Name" value="player1"> : <b id="player1"></b></td>
-            <td><input type="radio" id="strike2" name="strike" value="player2"><input type="text" id="player2Name" value="player2"> : <b id="player2">0</b></td>
+            <td><input type="radio" id="strike1" name="strike" value="player1" checked><input type="text" id="player1Name" value="player1"> : <b id="player1"></b>
+			<button id='updP1Score' onclick="toggle('playerOverrideDiv')"><b>...</b></button><table id='playerOverrideDiv' style="display:none"><tr><td>
+			<button id="p1Retd" onclick="retirePlayer('player1')">Retd.</button></td><td>
+			<input type="text" value="0" id="p1Score"><button onclick="overRidePlayerScore('player1')" id="p1Ovrd">Update</button></td></tr></table>
+			</td>
+            <td><input type="radio" id="strike2" name="strike" value="player2"><input type="text" id="player2Name" value="player2"> : <b id="player2">0</b> <button id='updP2Score' onclick="toggle('playerOverrideDiv2')"><b>...</b></button><table id='playerOverrideDiv2' style="display:none"><tr><td>
+			<button id="p2Retd" onclick="retirePlayer('player2')">Retd.</button></td><td>
+			<input type="text" value="0" id="p2Score"><button onclick="overRidePlayerScore('player2')" id="p2Ovrd">Update</button></td></tr></table></td>
          </tr>
       </div>
    </table>
-   <table border="3px 3px" class="scoreBoard" align="center">
+   <table border="2px 2px" class="scoreBoard" align="center">
       <tbody>
          <tr>
             <td><b>CurOvr: <i id="curOver">0</i></b></td>
@@ -804,8 +890,8 @@ input[type=text],
       </table>
       <table id="batsMensScoreTable" broder="3px 3px">
          <tr id="batsMenScoreDiv" style="display:none">
-            <td id="BatsMenStore"></td>
-            <td><button onclick="editBatsMenScore()">Edit section</button></td>
+			<td><table><tbody id="BatsMenStore"></tbody></table></td>
+            <td><button onclick="editBatsMenScore()">Edit</button></td>
                <div id="editScores" style="display:none"><textarea id="scoreArea"></textarea>
                   <button onclick="UpdateBatsMenScore()">Update</button>
                </div>
@@ -818,6 +904,134 @@ input[type=text],
          </tr>
       </table>
    </div>
+   <div id='helpSection' style="display:none;overflow-x:auto;"><button id='helpButton' onclick="toggle('helpSection')">Hide Help</button><pre id='helpContent'>
+***************************************
+Welcome to Rams_GullyCricket_2.2Beta
+***************************************
+visit for latest version: www.learnmodeon.com/cricket
+
+
+============================Section I========================================
+How to start/stop an innings?
+[Start] click on [Start] button to start/restart an innings of the match.
+[Share] click on Share button to copy url of scorecard for remote audience. Ensure you check on [Sync] button to save score online.
+[Clear] clicking on [Clear] button clears all local storage related to this app on your mobile.
+
+How to save data online/choose extra runs settings?
+
+[]Sync
+	>> If [sync] is selected then the score will be saved to server "EACH OVER". Press on Share button to copy the url of online score board.
+	>>> Tip: select this if you want to share live scorecard to remote audience.
+
+[]Wide 
+	>> If [Wide] is selected then on pressing [wd] button, +1 runs will be added to the score board.
+	>>> Tip: if selected +1 runs. If not selected +0 runs.
+	
+[]NoBall	
+	>> If [NoBall] is selected then on pressing [nb] button, +1 will be added to the score board.
+	>>>>> Tip: if selected +1 runs. If not selected +0 runs.
+
+
+================================Section II=============================================
+How to save batsmen score?
+O playerName1: Score1 [Retd.]  O playerName2: Score2 [Retd.]
+		> You can modify playerNames till you press on [wkt] or [Retd.] button.
+		> which ever radio button[O] is selected, it represents the batsman on strike.
+		> click on [Retd.] button to change the player. The old batsman will be stored in "Batsmen Score card" available at the bottom.
+		> Batsmen striking indicator(O radio button) needs to be cross checked and selected manually if wrong during runouts, no balls and extras.
+		
+		
+==============================SECTION III==================================
+Score card explained?
+
+>left most section:
+	curOver - This gives the number of runs scored so far in the current Over.
+	
+> middle section:
+	TotalScores/Wickets(overs)
+	
+> Right section:
+	CRR > This is current Run Rate.
+	
+	
+=================================SECTION IV=========================================
+Notification Bar: Yellow highlighted helps you with notifications. 
+
+
+===============================SECTION V=================================
+Scoring Tool?
+
+[0] + nb = 
+	> Ball doesn't count.
+	> textbox to give extra runs + nb=0/1 run based on [NoBall} selection at the top.
+		
+[0]+wkt =
+	> Ball counts.
+	> Bowled/catch just press on wkt. 
+	>Run Out
+		1. add runs to corresponding batsman. use [...].
+		2. select the player who got run out(O PlayerName).
+		3. Enter the number of runs completed in the [text box] if any and then press [wkt] button.
+		4. Ensure batting strike is marked to the correct batsman.
+		
+[wd] =
+	> Ball doesn't count.
+	> 0/1 runs based on selection of [Wide] at the top.
+		
+[dot] = 
+	> Ball counts.
+	> 0 runs
+		
+[1] = 
+	> Ball counts.
+	> 1 runs
+	
+[2] = 2 runs
+	> Ball counts.
+	> 1 runs
+	
+[3] = 
+	> Ball counts.
+	> 3 runs
+	
+[4] = 
+	> Ball counts.
+	> 4 runs
+	
+[6] = 6 runs
+	> Ball counts.
+	> 6 runs
+
+dot = 
+	> 0 runs
+1 = 
+	> 1 runs
+
+[Undo] =
+	> Undo the last ball, removes runs from total score,CRR, overs,wickets,*does not undo batsmen score - but you can edit manually*
+	
+[Nxt Over]=
+	> Jump over to nth over by clicking n times this button.
+	> Tip: Helpful to use the score card in the middle of the match. 
+	
+
+=====================================SECTION VI=================================================================================================
+[Batsmen Score]
+	> This is a toggle button which hides and displays the batsman score.
+	> On clicking this button you can see all batsmen score who got out. click on edit to modify the scores and names and update.
+
+[BallByBall]
+	> This is a toggle button which shows/hides ball by ball scoring.
+	
+[set Target]
+	> provide targetscore & total overs of the match and press Update. You will see chasing equation of # runs required for # balls.
+	
+	
+======================================USE CASES=============================================================================================
+How to use the scoring app from middle of the match?
+ > click on [start]. choose sync/wide/noball appropriately. give initial score at [0]+nb and press on [nb] button. Click on [nxt Over] button till you reach the current over.
+ 
+</pre><button id='helpButton' onclick="toggle('helpSection')">Hide Help</button></div>
    <div style="background-color:black;color:white;">
       <hr>
       <table>
