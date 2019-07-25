@@ -10,6 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ballByBall = $_POST["ballByBalls"];
 	$wickets = $_POST["wktsdb"];
 	$runRate = $_POST["crrdb"];
+	$batsmenScore = $_POST["bmScoresdb"];
     
     if ($score < 0 or $overs < 0 or $inningsId == "") {
         echo "Invalid data provided. Please ensure data is valid!";
@@ -44,8 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute() or die(mysqli_stmt_error($stmt));
         $stmt->store_result();
         if ($stmt->num_rows === 0) {
-            if ($stmt = $connection->prepare("INSERT INTO gully_cricket(innings_id,score,wickets,run_rate,overs,ball_by_ball) VALUES(?,?,?,?,?,?)")) {
-                $stmt->bind_param("ssisis", $inningsId, $score,$wickets,$runRate, $overs, $ballByBall);
+            if ($stmt = $connection->prepare("INSERT INTO gully_cricket(innings_id,score,wickets,run_rate,overs,ball_by_ball,batsmen_Score) VALUES(?,?,?,?,?,?,?)")) {
+                $stmt->bind_param("ssisiss", $inningsId, $score,$wickets,$runRate, $overs, $ballByBall,$batsmenScore);
                 $stmt->execute() or die(mysqli_stmt_error($stmt));
                 echo "New records created successfully";
             } else {
@@ -53,9 +54,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo $error;
             }
         } else {
-            $updateQry = "UPDATE gully_cricket SET score=?, overs=?, ball_by_ball=?,wickets=?,run_rate=? where innings_id=?";
+            $updateQry = "UPDATE gully_cricket SET score=?, overs=?, ball_by_ball=?,wickets=?,run_rate=?,batsmen_score=? where innings_id=?";
             if ($stmt = $connection->prepare($updateQry)) {
-                $stmt->bind_param("sisiss", $score, $overs, $ballByBall,$wickets,$runRate, $inningsId);
+                $stmt->bind_param("sisisss", $score, $overs, $ballByBall,$wickets,$runRate, $batsmenScore,$inningsId);
                 $stmt->execute() or die(mysqli_stmt_error($stmt));
                 echo "Records updated successfully";
             } else {

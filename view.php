@@ -4,26 +4,62 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 ?>
 <html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Score Card for Cricket">
+  <meta name="keywords" content="cricket,score,batting,bowling,scorecard,cric,match">
+  <meta name="author" content="Ramesh Babu Poludasu">
+  <meta name="email" content="rameshbabuiiit@gmail.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="-1" />
+  <meta http-equiv="Content-Language" content="en">
+</head>
 <body>
-<script>
+<style>
 #sboard{
 	font-size:40px;
 }
 .scoreBoard{
-	background-color : teal; 	border-collapse:collapse; 	color: white; 	table-layout: auto; 	width: 100%; 
+	background-color: teal;
+	border-collapse: collapse;
+	color: white;
+	table-layout: auto;
+	width: 100%;
 } 
 
 #ballByBallTable{
-	background-color:lightgreen;
-	border-collapse:collapse; 
-	table-layout: auto; 	
+	border-collapse: collapse;
 	width: 100%;
-	color:black;
-	
+	border: 2px solid #ddd;	
 }
-</script>
+
+
+#batsmenScore tr:nth-child(even) {background: #CCC; font-weight:bold;}
+#batsmenScore tr:nth-child(odd) {background: lightgreen;font-weight:bold;}
+
+#ref{
+	background-color: #e7e7e7;
+	color: black;
+	border: none;
+	color: black;
+	padding: 10px 15px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 20px;
+	margin: 4px 4px;
+	cursor: pointer;
+	border-radius: 10px;
+}
+
+#overNum{
+	font-size : 25px;
+}
+</style>
 <?php
-echo "Requested at-".date("h:i:sa");
+echo "Last requested at :".date("h:i:sa");
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	
 
@@ -47,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         return $connection;
     }
   ?>
-  <a href="view.php?inningsId=<?php echo $inningsId ?>&time=<?php echo time()?>"><button>Refresh</button></a>
+  <a href="view.php?inningsId=<?php echo $inningsId ?>&time=<?php echo time()?>"><button id="ref">Refresh</button></a>
   <?php
     $connection = db_connect();
     
@@ -64,9 +100,14 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	
 	while ($row = $result->fetch_assoc()) {		
 		//echo $row["score"];
-		echo "<table  class=\"scoreBoard\" align=\"center\" style=\"background-color : teal; 	border-collapse:collapse; 	color: white; 	table-layout: auto; 	width: 100%; font-size:40px;\"><tr>".
-				"<td><b id=\"sboard\"><i id=\"totScore\">".$row["score"]."</i>/<i id=\"wikts\">".$row["wickets"]."</i></b>(<i id=\"overNum\">".$row["overs"]."</i> ovrs)</td>".
-				"<td><b>CRR: <i id=\"runRate\">".$row["run_rate"]."</i></b></td></tr></table><table id=\"ballByBallTable\"><th>Over Wise Score</th><tr><td>".$row["ball_by_ball"]."</td></tr></table>";
+		echo "<br><br><table  class=\"scoreBoard\" align=\"center\"><tr>".
+				"<td><b id=\"sboard\"><i id=\"totScore\">".$row["score"]."</i>/<i id=\"wikts\">".$row["wickets"]."</i></b><i id=\"overNum\">(".$row["overs"]." overs)</i></td>".
+				"<td><b>CRR: <i id=\"runRate\">".$row["run_rate"]."</i></b></td></tr></table><br><br>";
+				
+		echo "<table id=\"ballByBallTable\"><th>Over Wise Score</th><tr><td>".$row["ball_by_ball"]."</td></tr></table>";
+	?>		
+	<br><br><table id="batsmenScore"><tr><th colspan="2" style="background-color:white;color:black;">Batsmen Score Card</th></tr><tr><th>Batsman</th><th>Score</th></tr><?php echo $row["batsmen_Score"] ?><table>
+	<?php
 	}
 	if(mysqli_num_rows($result) ==0){
 		echo "Please provide a valid inningsId";
