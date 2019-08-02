@@ -58,8 +58,8 @@ header("Pragma: no-cache");
 	font-size : 25px;
 }
 </style>
+ <form action='view.php' method='get'>Innings Id:<input type="text" name="inningsId"><input type="submit" value="Fetch"></form>
 <?php
-echo "Last requested at :".date("h:i:sa");
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	
 
@@ -83,8 +83,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         return $connection;
     }
   ?>
-  <a href="view.php?inningsId=<?php echo $inningsId ?>&time=<?php echo time()?>"><button id="ref">Refresh</button></a>
+  <!-- <a href="view.php?inningsId=<php echo $inningsId ?>&time=<php echo time()?>"><button id="ref">Refresh</button></a> -->
+    <a href="view.php?inningsId=<?php echo $inningsId ?>&time=<?php echo time()?>"><button id="ref">Refresh</button></a>
+  <a href="./"><button id="ref">Go to scoring app</button></a> 
   <?php
+  echo '<br><b>Request Time: </b><script type="text/javascript">var x = new Date(); document.write(x)</script>';
     $connection = db_connect();
     
     // Check connection
@@ -110,12 +113,13 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	<?php
 	}
 	if(mysqli_num_rows($result) ==0){
-		echo "Please provide a valid inningsId";
+		echo "<br>Please provide a valid inningsId";
 	}
 	
 	$stmt->close();
 	$connection->close();
 }
 ?>
+<hr><b>All Rights Reserved 2018-19&copy; rameshbabuiiit@gmail.com</b>
 </body>
 </html>
